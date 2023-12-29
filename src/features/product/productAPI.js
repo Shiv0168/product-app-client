@@ -40,10 +40,11 @@ export function deleteProductById(_id) {
   });
 }
 
-export function editProductById(_id, update) {
+export function editProductById(update) {
   return new Promise(async (resolve) => {
+    console.log(update);
     const response = await fetch(
-      `http://localhost:8080/api/v1/product/${_id}`,
+      `http://localhost:8080/api/v1/product/${update._id}`,
       {
         method: "PATCH",
         body: JSON.stringify(update),

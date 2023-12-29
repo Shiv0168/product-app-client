@@ -9,6 +9,7 @@ import {
 
 const initialState = {
   products: [],
+  selectedProduct: null,
   status: "idle",
 };
 
@@ -38,8 +39,8 @@ export const fetchProductByIdAsync = createAsyncThunk(
 
 export const editProductByIdAsync = createAsyncThunk(
   "product/editProductById",
-  async ({ _id, update }) => {
-    const response = await editProductById(_id, update);
+  async (update) => {
+    const response = await editProductById(update);
     return response.data;
   }
 );
@@ -81,7 +82,7 @@ export const productSlice = createSlice({
       })
       .addCase(fetchProductByIdAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.products = action.payload;
+        state.selectedProduct = action.payload;
       })
       .addCase(editProductByIdAsync.pending, (state) => {
         state.status = "loading";
@@ -106,5 +107,6 @@ export const productSlice = createSlice({
 export const { increment } = productSlice.actions;
 
 export const selectAllProducts = (state) => state.product.products;
+export const selectProductById = (state) => state.product.selectedProduct;
 
 export default productSlice.reducer;

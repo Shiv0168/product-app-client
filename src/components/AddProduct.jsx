@@ -14,15 +14,6 @@ export default function AddProduct() {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
-    // try {
-    //   await fetch("http://localhost:8080/api/v1/product", {
-    //     method: "POST",
-    //     body: JSON.stringify(data),
-    //     headers: { "content-type": "application/json" },
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
     dispatch(addProductAsync(data));
     nav("/");
   };

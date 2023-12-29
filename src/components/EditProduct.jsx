@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  editProductByIdAsync,
+  fetchProductByIdAsync,
+  selectProductById,
+} from "../features/product/productSlice";
 
 export default function EditProduct() {
   const {
@@ -12,43 +18,26 @@ export default function EditProduct() {
   } = useForm();
   const nav = useNavigate();
   const { _id } = useParams();
-  const [products, setProducts] = useState({});
-
-  const getProductById = async () => {
-    try {
-      const data = await fetch(`http://localhost:8080/api/v1/product/${_id}`);
-      const response = await data.json();
-      setProducts(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getProductById();
+    dispatch(fetchProductByIdAsync(_id));
   }, [_id]);
+  const selectedProduct = useSelector(selectProductById);
 
   useEffect(() => {
     if (_id) {
-      setValue("name", products.name),
-        setValue("description", products.description),
-        setValue("price", products.price),
-        setValue("image", products.image);
+      setValue("name", selectedProduct?.name),
+        setValue("description", selectedProduct?.description),
+        setValue("price", selectedProduct?.price),
+        setValue("image", selectedProduct?.image);
     }
-  }, [_id, products]);
+  }, [_id, selectedProduct, setValue]);
 
   const onSubmit = async (data) => {
-    try {
-      console.log(data);
-      await fetch(`http://localhost:8080/api/v1/product/${_id}`, {
-        method: "PATCH",
-        body: JSON.stringify(data),
-        headers: { "content-type": "application/json" },
-      });
-      nav("/");
-    } catch (error) {
-      console.log(error);
-    }
+    const updatedProduct = { ...data, _id };
+    dispatch(editProductByIdAsync(updatedProduct));
+    nav("/");
   };
 
   return (
