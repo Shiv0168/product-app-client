@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { addProductAsync } from "../features/product/productSlice";
 
 export default function AddProduct() {
   const {
@@ -9,18 +11,20 @@ export default function AddProduct() {
     formState: { errors },
   } = useForm();
   const nav = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
-    try {
-      await fetch("http://localhost:8080/api/v1/product", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "content-type": "application/json" },
-      });
-      nav("/");
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   await fetch("http://localhost:8080/api/v1/product", {
+    //     method: "POST",
+    //     body: JSON.stringify(data),
+    //     headers: { "content-type": "application/json" },
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    dispatch(addProductAsync(data));
+    nav("/");
   };
 
   return (
